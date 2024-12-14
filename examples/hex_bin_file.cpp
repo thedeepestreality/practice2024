@@ -2,7 +2,7 @@
 #include <fstream>
 
 // ch from [0,15]
-char digitToHex(char ch) {
+char digitToHex(unsigned char ch) {
 	if (ch < 10)
 		return '0' + ch;
 	return 'A' + ch - 10;
@@ -20,14 +20,14 @@ int main(int argc, char* argv[]) {
 	}
 	// line size
 	const int SZ = 16;
-	char buf[SZ];
+	unsigned char buf[SZ];
 	while (!in.eof()) {
-		in.read(buf, SZ);
+		in.read((char*)buf, SZ);
 		int fact_size = in.gcount();
 		for (int idx = 0; idx < fact_size; ++idx) {
 			/*std::cout << (int)buf[idx] << ' ';*/
-			char msb = buf[idx] / 16;
-			char lsb = buf[idx] % 16;
+			unsigned char msb = buf[idx] / 16;
+			unsigned char lsb = buf[idx] % 16;
 			std::cout << digitToHex(msb) << digitToHex(lsb) << ' ';
 		}
 		std::cout << '\n';
