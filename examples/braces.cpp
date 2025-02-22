@@ -1,34 +1,30 @@
 #include <iostream>
 #include <cassert>
 
-bool validBraces(const char* str) {
-	int counter = 0;
-	while (*str != 0) {
-		if (*str == '(')
-			++counter;
-		else
-			--counter;
-		if (counter < 0)
-			return false;
-		++str;
-	}
-	return (counter == 0);
-}
+//bool f(const char* s){
+//	int c=0;
+//	while(*s){
+//		c+=*s=='('?1:-1;
+//		if(c<0)return 0;
+//		++s;
+//	}return!c;}
+
+bool f(char*s){int c=0;for(;*s&&c>=0;c-=2**s++-81);return!c;}
 
 int main() {
 	// ok tests
-	assert(validBraces(""));
-	assert(validBraces("()"));
-	assert(validBraces("()()"));
-	assert(validBraces("(())"));
-	assert(validBraces("()(())"));
+	assert(f((char*)""));
+	assert(f((char*)"()"));
+	assert(f((char*)"()()"));
+	assert(f((char*)"(())"));
+	assert(f((char*)"()(())"));
 	// fail tests
-	assert(!validBraces("("));
-	assert(!validBraces(")"));
-	assert(!validBraces(")("));
-	assert(!validBraces("()("));
-	assert(!validBraces("(()"));
-	assert(!validBraces("())"));
+	assert(!f((char*)"("));
+	assert(!f((char*)")"));
+	assert(!f((char*)")("));
+	assert(!f((char*)"()("));
+	assert(!f((char*)"(()"));
+	assert(!f((char*)"())"));
 	std::cout << "All tests passed!\n";
 	return 0;
 }
