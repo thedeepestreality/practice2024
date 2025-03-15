@@ -14,6 +14,7 @@ public:
 	Complex(double re = 0.0, double im = 0.0) : re_(re), im_(im) {}
 
 	Complex& operator+=(const Complex& right);
+	Complex& operator*=(const Complex& right);
 
 	//Complex operator+(const Complex& right) {
 	//	//double re = re_ + right.re_;
@@ -34,6 +35,7 @@ public:
 };
 
 Complex operator+(const Complex& left, const Complex& right);
+Complex operator*(const Complex& left, const Complex& right);
 bool operator==(const Complex& left, const Complex& right);
 bool operator>(const Complex& left, const Complex& right);
 bool operator!=(const Complex& left, const Complex& right);

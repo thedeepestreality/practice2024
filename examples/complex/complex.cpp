@@ -6,6 +6,15 @@ Complex& Complex::operator+=(const Complex& right) {
 	return *this;
 }
 
+Complex& Complex::operator*=(const Complex& right)
+{
+	double re = re_ * right.re_ - im_ * right.im_;
+	double im = re_ * right.im_ + right.re_ * im_;
+	re_ = re;
+	im_ = im;
+	return *this;
+}
+
 Complex& Complex::operator++() {
 	return *this += Complex(1, 0);
 }
@@ -27,6 +36,11 @@ double Complex::getIm() const {
 Complex operator+(const Complex& left, const Complex& right) {
 	Complex left_copy = left;
 	return left_copy += right;
+}
+
+Complex operator*(const Complex& left, const Complex& right) {
+	Complex left_copy = left;
+	return left_copy *= right;
 }
 
 bool operator==(const Complex& left, const Complex& right) {
