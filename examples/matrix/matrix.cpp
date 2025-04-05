@@ -58,16 +58,48 @@ Matrix& Matrix::operator=(const Matrix& val) {
 	return *this;
 }
 
-void Matrix::swap(Matrix&& val) {
+void Matrix::swap(Matrix&& val) noexcept {
 	std::swap(val.m_data, m_data);
 	std::swap(val.m_rows, m_rows);
 	std::swap(val.m_cols, m_cols);
 }
 
-Matrix::Matrix(Matrix&& val) : m_data(nullptr), m_rows(0), m_cols(0) {
+Matrix::Matrix(Matrix&& val) noexcept : m_data(nullptr), m_rows(0), m_cols(0) {
 	swap(std::move(val));
 }
 
-Matrix& Matrix::operator=(Matrix&& val) {
+Matrix& Matrix::operator=(Matrix&& val) noexcept {
 	swap(std::move(val));
+}
+
+Matrix& Matrix::operator+=(const Matrix& val) {
+	if (m_rows != val.m_rows || m_cols != val.m_cols)
+		throw "wrong sizes";
+	for (int row = 0; row < m_rows; ++row)
+		for (int col = 0; col < m_cols; ++col)
+			m_data[row][col] += val.m_data[row][col];
+	return *this;
+}
+
+Matrix operator+(const Matrix& left, const Matrix& right) {
+	Matrix res = left;
+	res += right;
+	return res;
+}
+
+int& Matrix::at(int row, int col) {
+	return m_data[row][col];
+}
+
+int Matrix::at(int row, int col) const {
+	return m_data[row][col];
+}
+
+std::ostream& operator<<(std::ostream& out, const Matrix& val) {
+	for (int row = 0; row < val.rows(); ++row) {
+		for (int col = 0; col < val.cols(); ++col)
+			out << val.at(row, col) << " ";
+		out << '\n';
+	}
+	return out;
 }
