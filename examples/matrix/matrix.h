@@ -15,6 +15,7 @@ private:
 	int** m_data;
 	int m_rows;
 	int m_cols;
+	void swap(Matrix&& val) noexcept;
 public:
 	Matrix(int rows = 1, int cols = 1);
 	// copy constructor
@@ -23,16 +24,17 @@ public:
 	// same efficiency
 	// Matrix(Matrix val) { std::move(val); }
 	// move constructor
-	Matrix(Matrix&& val);
+	Matrix(Matrix&& val) noexcept;
 
 	// assignment by copy
 	Matrix& operator=(const Matrix& val);
 	// assignment by move
-	Matrix& operator=(Matrix&& val);
+	Matrix& operator=(Matrix&& val) noexcept;
 
 	Matrix& operator+=(const Matrix& val);
 
 	int& at(int row, int col);
+	int at(int row, int col) const;
 
 	int rows() const;
 	int cols() const;
