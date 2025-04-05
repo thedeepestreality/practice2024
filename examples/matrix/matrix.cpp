@@ -40,7 +40,7 @@ Matrix::Matrix(const Matrix& val) : Matrix(val.m_rows, val.m_cols)
 
 Matrix& Matrix::operator=(const Matrix& val) {
 	if (this == &val)
-		return;
+		return *this;
 	// clear memory
 	if (m_data != nullptr){
 		for (int r = 0; r < m_rows; ++r)
@@ -70,6 +70,7 @@ Matrix::Matrix(Matrix&& val) noexcept : m_data(nullptr), m_rows(0), m_cols(0) {
 
 Matrix& Matrix::operator=(Matrix&& val) noexcept {
 	swap(std::move(val));
+	return *this;
 }
 
 Matrix& Matrix::operator+=(const Matrix& val) {
