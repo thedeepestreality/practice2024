@@ -14,4 +14,5 @@ struct CellPosition {
 struct GameState {
 	std::vector<std::vector<CellType>> m_field;
 	CellPosition m_player_pos;
+	unsigned long long epoch = 0;
 };

@@ -16,6 +16,7 @@ public:
 	GameManager(const GameState& state) : m_state(state) {};
 
 	void move_player(Direction dir) {
+		++m_state.epoch;
 		CellPosition candidate = m_state.m_player_pos;
 		switch (dir) {
 			case Direction::Up: 

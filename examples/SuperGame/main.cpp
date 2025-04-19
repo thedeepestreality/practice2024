@@ -1,10 +1,14 @@
 #include <iostream>
 #include <vector>
+#include <chrono>
+#include <thread>
 
 #include "GameState.h"
 #include "GameManager.h"
 
 void render_world(const GameState& state) {
+	system("cls");
+	std::cout << "Epoch " << state.epoch << '\n';
 	for (int row = 0; row < state.m_field.size(); ++row) {
 		for (int col = 0; col < state.m_field[0].size(); ++col) {
 			if (state.m_player_pos.row == row && state.m_player_pos.col == col)
@@ -22,6 +26,7 @@ void render_world(const GameState& state) {
 		std::cout << '\n';
 	}
 	std::cout << '\n';
+	std::this_thread::sleep_for(std::chrono::milliseconds(1000));
 }
 
 int main() {
@@ -42,18 +47,15 @@ int main() {
 	render_world(manager.get_state());
 
 	for (int step = 0; step < 6; ++step) {
-		std::cout << "Iteration " << step << '\n';
 		manager.move_player(Direction::Right);
 		// Render field
 		render_world(manager.get_state());
 	}
 
-	std::cout << "Iteration 6\n";
 	manager.move_player(Direction::Down);
 	// Render field
 	render_world(manager.get_state());
 
-	std::cout << "Iteration 7\n";
 	manager.move_player(Direction::Left);
 	// Render field
 	render_world(manager.get_state());
