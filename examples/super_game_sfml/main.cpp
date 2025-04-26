@@ -33,7 +33,7 @@ void render_world(const GameState& state) {
 
 int main() {
 
-	auto window = sf::RenderWindow(sf::VideoMode({1920u, 1080u}), "CMake SFML Project");
+	auto window = sf::RenderWindow(sf::VideoMode({640u, 480u}), "CMake SFML Project");
     window.setFramerateLimit(144);
 
 	sf::Event event;
@@ -45,7 +45,12 @@ int main() {
 				window.close();
         }
 
+		sf::CircleShape shape(50.f);
+		// set the shape color to green
+		shape.setFillColor(sf::Color(100, 250, 50));
+		
         window.clear();
+		window.draw(shape);
         window.display();
     }
 
