@@ -13,6 +13,6 @@ FetchContent_Declare(SFML
     SYSTEM)
 FetchContent_MakeAvailable(SFML)
 
-add_executable(supergame src/main.cpp)
+add_executable(supergame main.cpp)
 target_compile_features(supergame PRIVATE cxx_std_17)
 target_link_libraries(supergame PRIVATE SFML::Graphics)
