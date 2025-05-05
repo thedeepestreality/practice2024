@@ -35,29 +35,41 @@ struct RenderParams {
 	float cell_side = 100.0f;
 	sf::Color empty_color = sf::Color(100, 250, 50);
 	sf::Color wall_color = sf::Color(100, 100, 100);
-	sf::Color player_color = sf::Color(255, 100, 100);
+	sf::Color player_color = sf::Color(100, 100, 250);
+	sf::Color enemy_color = sf::Color(255, 100, 100);
 };
 
 void render_world(const GameState& state, sf::RenderWindow& window, const RenderParams& params = RenderParams()) {
 	const float cell_side = params.cell_side;
 	sf::RectangleShape cell({ cell_side, cell_side });
+	// Fill field cells
 	for (int row = 0; row < state.m_field.size(); ++row) {
 		for (int col = 0; col < state.m_field[0].size(); ++col) {
 			cell.setPosition(col*cell_side, row*cell_side);
-			if (state.m_player_pos.row == row && state.m_player_pos.col == col)
-				cell.setFillColor(params.player_color);
-			else
-				switch (state.m_field[row][col]) {
+			switch (state.m_field[row][col]) {
 				case CellType::Empty:
 					cell.setFillColor(params.empty_color);
 					break;
 				case CellType::Wall:
 					cell.setFillColor(params.wall_color);
 					break;
-				}
+			}
 			window.draw(cell);
 		}
 	}
+
+	// Fill player cell
+	cell.setPosition(state.m_player_pos.col * cell_side, state.m_player_pos.row * cell_side);
+	cell.setFillColor(params.player_color);
+	window.draw(cell);
+
+	// Fill enemy cells
+	for (CellPosition enemy_pos : state.m_enemy_pos) {
+		cell.setPosition(enemy_pos.col * cell_side, enemy_pos.row * cell_side);
+		cell.setFillColor(params.enemy_color);
+		window.draw(cell);
+	}
+
 	std::this_thread::sleep_for(std::chrono::milliseconds(50));
 }
 
@@ -74,6 +86,7 @@ int main() {
 	};
 	init_state.m_player_pos.row = 0;
 	init_state.m_player_pos.col = 0;
+	init_state.m_enemy_pos = { {0,1}, {1,0} };
 
 	GameManager manager(init_state);
 	const unsigned int win_width = 640u;
@@ -124,7 +137,8 @@ int main() {
 		if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Up))
 			dir = Direction::Up;
 
-		manager.move_player(dir);
+		//manager.move_player(dir);
+		manager.update_world(dir);
     }
 
 	/*
