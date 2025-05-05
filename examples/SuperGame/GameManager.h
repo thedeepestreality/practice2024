@@ -3,6 +3,7 @@
 #include "GameState.h"
 
 enum class Direction {
+	None,
 	Up,
 	Down,
 	Left,

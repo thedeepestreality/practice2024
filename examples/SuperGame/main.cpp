@@ -57,10 +57,8 @@ void render_world(const GameState& state, sf::RenderWindow& window, const Render
 				}
 			window.draw(cell);
 		}
-		std::cout << '\n';
 	}
-	std::cout << '\n';
-	std::this_thread::sleep_for(std::chrono::milliseconds(200));
+	std::this_thread::sleep_for(std::chrono::milliseconds(50));
 }
 
 int main() {
@@ -114,7 +112,18 @@ int main() {
 		render_world(state, window, render_params);
 
         window.display();
-		Direction dir = Direction(rand() % 4);
+		/*Direction dir = Direction(rand() % 4);*/
+		// Process direction
+		Direction dir = Direction::None;
+		if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Left))
+			dir = Direction::Left;
+		if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Right))
+			dir = Direction::Right;
+		if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Down))
+			dir = Direction::Down;
+		if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Up))
+			dir = Direction::Up;
+
 		manager.move_player(dir);
     }
 
