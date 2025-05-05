@@ -13,9 +13,9 @@ enum class Direction {
 class GameManager {
 private:
 	GameState m_state;
+	const int m_skip_enemy_steps = 4;
 	
 	CellPosition move(CellPosition pos, Direction dir) {
-		/*++m_state.epoch;*/
 		CellPosition new_pos = pos;
 		switch (dir) {
 		case Direction::Up:
@@ -41,13 +41,23 @@ private:
 			return pos;
 		return new_pos;
 	}
+
+	bool check_enemy_meet() const {
+		for (CellPosition enemy_pos : m_state.m_enemy_pos)
+			if (enemy_pos.col == m_state.m_player_pos.col && enemy_pos.row == m_state.m_player_pos.row)
+				return true;
+		return false;
+	}
 public:
 	GameManager(const GameState& state) : m_state(state) {};
 
-	void update_world(Direction player_dir) {
+	bool update_world(Direction player_dir) {
+		++m_state.epoch;
 		m_state.m_player_pos = move(m_state.m_player_pos, player_dir);
-		for (CellPosition& enemy_pos : m_state.m_enemy_pos)
-			enemy_pos = move(enemy_pos, Direction((rand() % 4) + 1));
+		if (m_state.epoch % m_skip_enemy_steps == 0)
+			for (CellPosition& enemy_pos : m_state.m_enemy_pos)
+				enemy_pos = move(enemy_pos, Direction((rand() % 4) + 1));
+		return check_enemy_meet();
 	}
 
 	GameState get_state() const {

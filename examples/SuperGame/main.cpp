@@ -86,7 +86,7 @@ int main() {
 	};
 	init_state.m_player_pos.row = 0;
 	init_state.m_player_pos.col = 0;
-	init_state.m_enemy_pos = { {0,1}, {1,0} };
+	init_state.m_enemy_pos = { {0,5}, {5,0} };
 
 	GameManager manager(init_state);
 	const unsigned int win_width = 640u;
@@ -138,7 +138,31 @@ int main() {
 			dir = Direction::Up;
 
 		//manager.move_player(dir);
-		manager.update_world(dir);
+		if (manager.update_world(dir)) {
+			// If collided to enemy, show modal window and die
+
+			sf::RenderWindow popUpWindow(sf::VideoMode(320, 240), "GAME OVER", sf::Style::Close);
+			popUpWindow.setPosition(window.getPosition() + sf::Vector2i(100, 100));
+			sf::Event event;
+			while (popUpWindow.isOpen())
+			{
+				popUpWindow.clear(sf::Color::Cyan);
+				popUpWindow.display();
+
+				while (popUpWindow.pollEvent(event))
+				{
+					if (event.type == sf::Event::Closed)
+						popUpWindow.close();
+					if (event.type == sf::Event::LostFocus)
+					{
+						if (window.hasFocus())
+							popUpWindow.requestFocus();
+					}
+				}
+				sf::sleep(sf::milliseconds(1));
+			}
+			window.close();
+		}
     }
 
 	/*
