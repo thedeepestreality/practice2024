@@ -31,21 +31,28 @@ void render_world(const GameState& state) {
 	std::this_thread::sleep_for(std::chrono::milliseconds(1000));
 }
 
-void render_world(const GameState& state, sf::RenderWindow& window) {
-	const float cell_side = 100.0f;
+struct RenderParams {
+	float cell_side = 100.0f;
+	sf::Color empty_color = sf::Color(100, 250, 50);
+	sf::Color wall_color = sf::Color(100, 100, 100);
+	sf::Color player_color = sf::Color(255, 100, 100);
+};
+
+void render_world(const GameState& state, sf::RenderWindow& window, const RenderParams& params = RenderParams()) {
+	const float cell_side = params.cell_side;
 	sf::RectangleShape cell({ cell_side, cell_side });
 	for (int row = 0; row < state.m_field.size(); ++row) {
 		for (int col = 0; col < state.m_field[0].size(); ++col) {
 			cell.setPosition(col*cell_side, row*cell_side);
 			if (state.m_player_pos.row == row && state.m_player_pos.col == col)
-				cell.setFillColor(sf::Color(255, 100, 100));
+				cell.setFillColor(params.player_color);
 			else
 				switch (state.m_field[row][col]) {
 				case CellType::Empty:
-					cell.setFillColor(sf::Color(100, 250, 50));
+					cell.setFillColor(params.empty_color);
 					break;
 				case CellType::Wall:
-					cell.setFillColor(sf::Color(100, 100, 100));
+					cell.setFillColor(params.wall_color);
 					break;
 				}
 			window.draw(cell);
@@ -59,19 +66,34 @@ void render_world(const GameState& state, sf::RenderWindow& window) {
 int main() {
 	GameState init_state;
 	init_state.m_field = {
-		{ CellType::Empty, CellType::Empty, CellType::Empty, CellType::Empty, CellType::Empty },
-		{ CellType::Empty, CellType::Wall,  CellType::Empty, CellType::Wall,  CellType::Empty },
-		{ CellType::Empty, CellType::Wall,  CellType::Empty, CellType::Wall,  CellType::Empty },
-		{ CellType::Empty, CellType::Wall,  CellType::Empty, CellType::Wall,  CellType::Empty },
-		{ CellType::Empty, CellType::Empty, CellType::Empty, CellType::Empty, CellType::Empty }
+		{ CellType::Empty, CellType::Empty, CellType::Empty, CellType::Empty, CellType::Empty, CellType::Empty, CellType::Empty, CellType::Empty},
+		{ CellType::Empty, CellType::Empty, CellType::Empty, CellType::Empty, CellType::Empty, CellType::Empty, CellType::Empty, CellType::Empty },
+		{ CellType::Empty, CellType::Empty, CellType::Wall,  CellType::Empty, CellType::Empty, CellType::Wall,  CellType::Empty, CellType::Empty },
+		{ CellType::Empty, CellType::Empty, CellType::Wall,  CellType::Wall,  CellType::Wall,  CellType::Wall,  CellType::Empty, CellType::Empty },
+		{ CellType::Empty, CellType::Empty, CellType::Wall,  CellType::Empty, CellType::Empty, CellType::Wall,  CellType::Empty, CellType::Empty },
+		{ CellType::Empty, CellType::Empty, CellType::Empty, CellType::Empty, CellType::Empty, CellType::Empty, CellType::Empty, CellType::Empty },
+		{ CellType::Empty, CellType::Empty, CellType::Empty, CellType::Empty, CellType::Empty, CellType::Empty, CellType::Empty, CellType::Empty },
 	};
 	init_state.m_player_pos.row = 0;
 	init_state.m_player_pos.col = 0;
 
 	GameManager manager(init_state);
+	const unsigned int win_width = 640u;
+	const unsigned int win_height = 480u;
 
-	sf::RenderWindow window(sf::VideoMode({640u, 480u}), "CMake SFML Project");
+	sf::RenderWindow window(sf::VideoMode({ win_width, win_height }), "CMake SFML Project");
     window.setFramerateLimit(144);
+
+	const int field_rows = init_state.m_field.size();
+	const int field_cols = init_state.m_field[0].size();
+
+	const float width_ratio = (float)win_width / field_cols;
+	const float height_ratio = (float)win_height / field_rows;
+
+	const float cell_side = std::min(width_ratio, height_ratio);
+
+	RenderParams render_params;
+	render_params.cell_side = cell_side;
 
 	sf::Event event;
     while (window.isOpen())
@@ -89,7 +111,7 @@ int main() {
         window.clear();
 		//window.draw(shape);
 		auto state = manager.get_state();
-		render_world(state, window);
+		render_world(state, window, render_params);
 
         window.display();
 		Direction dir = Direction(rand() % 4);
