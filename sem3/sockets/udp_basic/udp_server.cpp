@@ -28,7 +28,6 @@ int main()
     // Filling server information
     servaddr.sin_family    = AF_INET; // IPv4
     servaddr.sin_addr.s_addr = INADDR_ANY;
-
     servaddr.sin_port = htons(PORT);
 
     // Bind the socket with the server address
@@ -48,7 +47,7 @@ int main()
         (char *)buffer,
         BUF_SZ,
         0,
-        (struct sockaddr *) &cliaddr,
+        reinterpret_cast<sockaddr*>(&cliaddr),
         &len
     );
     buffer[n] = '\0';
@@ -60,7 +59,7 @@ int main()
         msg_to_send,
         strlen(msg_to_send),
         0,
-        (const struct sockaddr *) &cliaddr,
+        reinterpret_cast<sockaddr*>(&cliaddr),
         len
     );
     std::cout << "Hello message sent." << std::endl;

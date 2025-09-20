@@ -30,17 +30,17 @@ int main()
     servaddr.sin_addr.s_addr = inet_addr("127.0.0.1");
 
     socklen_t len = sizeof(servaddr);
-    sendto(
-        sockfd,
-        msg_to_send,
-        strlen(msg_to_send),
-        0,
-        reinterpret_cast<sockaddr*>(&servaddr),
-        len
-    );
+    // sendto(
+    //     sockfd,
+    //     msg_to_send,
+    //     strlen(msg_to_send),
+    //     0,
+    //     reinterpret_cast<sockaddr*>(&servaddr),
+    //     len
+    // );
     std::cout<<"Message sent to server\n";
 
-    // To make socket non-blocking
+    // // To make socket non-blocking
     // timeval read_timeout;
     // read_timeout.tv_sec = 0;
     // read_timeout.tv_usec = 10;
