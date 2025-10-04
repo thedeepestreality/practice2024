@@ -8,9 +8,9 @@
 
 #pragma comment(lib,"ws2_32.lib") //Winsock Library
 
-#define SERVER "192.168.0.17"	//ip address of udp server
-#define BUFLEN 512	//Max length of buffer
-#define PORT 2023	//The port on which to listen for incoming data
+#define SERVER "127.0.0.1"	//ip address of udp server
+#define BUFLEN 512			//Max length of buffer
+#define PORT 2025			//The port on which to listen for incoming data
 
 void handleError(bool err, const char* msg)
 {
@@ -41,6 +41,7 @@ int main(void)
 	sockaddr_in si_other;
 	si_other.sin_family = AF_INET;
 	si_other.sin_port = htons(PORT);
+	// Convert IP addr string to s_addr struct field
 	InetPton(AF_INET, _T(SERVER), &si_other.sin_addr.s_addr);
 	int slen = sizeof(si_other);
 
@@ -61,7 +62,7 @@ int main(void)
 		res = recvfrom(sock, buf, BUFLEN, 0, (struct sockaddr*)&si_other, &slen);
 		handleError(res == SOCKET_ERROR, "recvfrom() failed with error code : ");
 
-		std::cout << buf;
+		std::cout << buf << '\n';
 	}
 
 	closesocket(sock);

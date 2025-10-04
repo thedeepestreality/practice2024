@@ -4,7 +4,7 @@
 #include <iostream>
 
 #pragma comment(lib,"ws2_32.lib") //Winsock Library
-const int PORT = 2024;
+const int PORT = 2025;
 
 void handleError(bool err, const char* msg)
 {

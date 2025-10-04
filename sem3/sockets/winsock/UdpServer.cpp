@@ -3,8 +3,10 @@
 
 #pragma comment(lib,"ws2_32.lib") //Winsock Library
 
+//172.23.123.205
+
 #define BUFLEN 512	//Max length of buffer
-#define PORT 8888	//The port on which to listen for incoming data
+#define PORT 2025	//The port on which to listen for incoming data
 
 void handleError(bool err, const char* msg)
 {
@@ -53,9 +55,16 @@ int main()
 		//clear the buffer by filling null, it might have previously received data
 		memset(buf, '\0', BUFLEN);
 
-		int recv_len;
 		//try to receive some data, this is a blocking call
-		if ((recv_len = recvfrom(sock, buf, BUFLEN, 0, (struct sockaddr*)&si_other, &slen)) == SOCKET_ERROR)
+		int recv_len = recvfrom(
+			sock,
+			buf, 
+			BUFLEN, 
+			0, 
+			reinterpret_cast<sockaddr*>(&si_other),
+			&slen
+		);
+		if (recv_len == SOCKET_ERROR)
 		{
 			printf("recvfrom() failed with error code : %d", WSAGetLastError());
 			exit(EXIT_FAILURE);
@@ -64,15 +73,15 @@ int main()
 		//print details of the client/peer and the data received
 		//printf("Received packet from %s:%d\n", inet_ntoa(si_other.sin_addr), ntohs(si_other.sin_port));
 		printf("Data: %s\n", buf);
-		char* ip = (char*)&si_other.sin_addr.s_addr;
+		unsigned char* ip = reinterpret_cast<unsigned char*>(&si_other.sin_addr.s_addr);
 		printf("From: %d.%d.%d.%d\n", ip[0], ip[1], ip[2], ip[3]);
-		//strcpy_s(buf, "megatron");
-		////now reply the client with the same data
-		//if (sendto(sock, buf, strlen(buf), 0, (struct sockaddr*)&si_other, slen) == SOCKET_ERROR)
-		//{
-		//	printf("sendto() failed with error code : %d", WSAGetLastError());
-		//	exit(EXIT_FAILURE);
-		//}
+		strcpy_s(buf, "megatron");
+		//now reply the client with the same data
+		if (sendto(sock, buf, strlen(buf), 0, reinterpret_cast<sockaddr*>(&si_other), slen) == SOCKET_ERROR)
+		{
+			printf("sendto() failed with error code : %d", WSAGetLastError());
+			exit(EXIT_FAILURE);
+		}
 	}
 
 	closesocket(sock);

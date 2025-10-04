@@ -3,7 +3,7 @@
 #include <WS2tcpip.h>
 #include <tchar.h>
 
-const int PORT = 2024;
+const int PORT = 2025;
 #pragma comment(lib,"ws2_32.lib") //Winsock Library
 
 void handleError(bool err, const char* msg)
@@ -33,7 +33,7 @@ int main(int argc, char const* argv[])
 	servaddr.sin_family = AF_INET;
 	servaddr.sin_port = htons(PORT);
 	//servaddr.sin_addr.s_addr = INADDR_ANY;
-	InetPton(AF_INET, _T("192.168.1.109"), &servaddr.sin_addr.s_addr);
+	InetPton(AF_INET, _T("127.0.0.1"), &servaddr.sin_addr.s_addr);
 
 	int status = connect(
 		client_sock,
